@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import re
-import sqlite3
+from .sqlite_utils import open_sqlite
 
 SKIP_DIRS = {
     ".git", ".vs", ".venv", "node_modules", "library", "temp", "obj", "bin",
@@ -29,7 +29,7 @@ def redact(text):
 class ProjectIndexer:
     def __init__(self, dbpath):
         self.dbpath = str(dbpath)
-        with sqlite3.connect(self.dbpath) as db:
+        with open_sqlite(self.dbpath) as db:
             db.execute("""CREATE TABLE IF NOT EXISTS project_files (
                 path TEXT PRIMARY KEY, root TEXT NOT NULL, content TEXT NOT NULL,
                 indexed_at TEXT DEFAULT CURRENT_TIMESTAMP)""")
@@ -40,7 +40,7 @@ class ProjectIndexer:
         if not root.is_dir():
             raise ValueError("The selected project directory does not exist")
         count, bytes_read, skipped = 0, 0, 0
-        with sqlite3.connect(self.dbpath) as db:
+        with open_sqlite(self.dbpath) as db:
             # Only this user's selected root is refreshed. No other indexed roots are touched.
             db.execute("DELETE FROM project_files WHERE root=?", (str(root),))
             for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
@@ -79,7 +79,7 @@ class ProjectIndexer:
         words = [w.lower() for w in re.findall(r"[a-zA-Z_][a-zA-Z0-9_]{1,50}", query)][:5]
         if not words:
             return []
-        with sqlite3.connect(self.dbpath) as db:
+        with open_sqlite(self.dbpath) as db:
             # No user-controlled SQL fragments: all values parameterized.
             clauses = " OR ".join(["lower(content) LIKE ? OR lower(path) LIKE ?" for _ in words])
             args = []
@@ -100,5 +100,5 @@ class ProjectIndexer:
 
     def clear_root(self, root):
         """Forget all cached snippets for one formerly approved workspace."""
-        with sqlite3.connect(self.dbpath) as db:
+        with open_sqlite(self.dbpath) as db:
             db.execute("DELETE FROM project_files WHERE root=?", (str(Path(root).resolve()),))

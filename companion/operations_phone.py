@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 import re
-import sqlite3
+from .sqlite_utils import open_sqlite
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
@@ -35,16 +35,16 @@ class RemoteOperations:
         Path(self.db).parent.mkdir(parents=True,exist_ok=True)
         self.queue=queue
         self.phone=phone
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             db.execute("CREATE TABLE IF NOT EXISTS remote_state(key TEXT PRIMARY KEY, value TEXT NOT NULL)")
 
     def _offset(self):
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             row=db.execute("SELECT value FROM remote_state WHERE key='offset'").fetchone()
         return int(row[0]) if row else 0
 
     def _save_offset(self,offset):
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             db.execute("INSERT INTO remote_state(key,value) VALUES('offset',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",(str(int(offset)),))
 
     @staticmethod

@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import os
 import re
-import sqlite3
+from .sqlite_utils import open_sqlite
 from datetime import date,datetime,timezone
 from pathlib import Path
 from urllib.error import HTTPError,URLError
@@ -34,7 +34,7 @@ class PhoneBriefing:
     def __init__(self,dbpath):
         self.path=str(dbpath)
         Path(self.path).parent.mkdir(parents=True,exist_ok=True)
-        with sqlite3.connect(self.path) as db:
+        with open_sqlite(self.path) as db:
             db.execute("""CREATE TABLE IF NOT EXISTS phone_deliveries(
               digest_id TEXT PRIMARY KEY, sent_at TEXT NOT NULL, message_type TEXT NOT NULL,
               outcome TEXT NOT NULL)""")
@@ -59,7 +59,7 @@ class PhoneBriefing:
                     re.fullmatch(r"-?\d{5,20}",chat))
 
     def delivered(self,digest_id):
-        with sqlite3.connect(self.path) as db:
+        with open_sqlite(self.path) as db:
             return bool(db.execute("SELECT 1 FROM phone_deliveries WHERE digest_id=? AND outcome='sent'",(digest_id,)).fetchone())
 
     def send(self, message, *, message_type="summary", enabled=False, digest_id=None, transport=None):
@@ -67,7 +67,7 @@ class PhoneBriefing:
         if message_type not in SAFE_TYPES:return {"status":"blocked_type"}
         if not self.configured():return {"status":"missing_telegram_configuration"}
         digest_id=str(digest_id or f"{date.today().isoformat()}:{message_type}")[:100]
-        with sqlite3.connect(self.path) as db:
+        with open_sqlite(self.path) as db:
             if db.execute("SELECT 1 FROM phone_deliveries WHERE digest_id=? AND outcome='sent'",(digest_id,)).fetchone():
                 return {"status":"already_sent"}
         body=sanitize_phone_text(message)
@@ -85,7 +85,7 @@ class PhoneBriefing:
         except (URLError,HTTPError,TimeoutError,OSError,ValueError):
             ok=False
         if ok:
-            with sqlite3.connect(self.path) as db:
+            with open_sqlite(self.path) as db:
                 db.execute("INSERT OR REPLACE INTO phone_deliveries(digest_id,sent_at,message_type,outcome) VALUES(?,?,?,?)",
                            (digest_id,datetime.now(timezone.utc).isoformat(),message_type,"sent"))
         return {"status":"sent" if ok else "delivery_failed", "digest_id":digest_id}

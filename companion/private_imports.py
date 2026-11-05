@@ -12,7 +12,7 @@ import hashlib
 import io
 import json
 import re
-import sqlite3
+from .sqlite_utils import open_sqlite
 from datetime import datetime,timezone
 from pathlib import Path
 
@@ -85,7 +85,7 @@ class EncryptedImportVault:
         Path(self.db).parent.mkdir(parents=True,exist_ok=True)
         self.permissions=permissions
         self._test_key=key_bytes
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             db.execute("""CREATE TABLE IF NOT EXISTS encrypted_imports(
                id INTEGER PRIMARY KEY AUTOINCREMENT,scope TEXT NOT NULL,source_tag TEXT NOT NULL,
                observed_at TEXT NOT NULL,imported_at TEXT NOT NULL,ciphertext BLOB NOT NULL)""")
@@ -122,7 +122,7 @@ class EncryptedImportVault:
         cipher=self._cipher()
         source_tag=hashlib.sha256(path.name.encode("utf-8","replace")).hexdigest()[:16]
         now=utc_now()
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             for item in rows:
                 observed=str(item.get("date") or item.get("Date") or item.get("DTSTART") or now)[:40]
                 payload=json.dumps(item,ensure_ascii=False).encode()
@@ -136,7 +136,7 @@ class EncryptedImportVault:
             return {"status":"permission_denied","scope":scope}
         cipher=self._cipher()
         terms=re.findall(r"[a-z0-9]{3,}",str(query).lower())[:7]
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             rows=db.execute("SELECT observed_at,imported_at,ciphertext FROM encrypted_imports WHERE scope=? ORDER BY id DESC LIMIT 1800",(scope,)).fetchall()
         matching=[]
         for observed,imported,encrypted in rows:
@@ -150,13 +150,13 @@ class EncryptedImportVault:
                 "caveat":"Owner-imported snapshot, not a live bank, email, health or calendar connection."}
 
     def counts(self):
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             rows=db.execute("SELECT scope,count(*) FROM encrypted_imports GROUP BY scope").fetchall()
         return {scope:n for scope,n in rows if self.permissions.permitted(scope,"local")}
 
     def erase_scope(self,scope):
         if scope not in SCOPES:raise ValueError("Invalid permission category")
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             db.execute("PRAGMA secure_delete=ON")
             db.execute("DELETE FROM encrypted_imports WHERE scope=?",(scope,))
         self.permissions.audit("private_import_erase","done",f"Erased encrypted {scope} imports")
