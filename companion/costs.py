@@ -1,4 +1,4 @@
-import sqlite3
+from .sqlite_utils import open_sqlite
 from datetime import datetime
 from pathlib import Path
 
@@ -27,7 +27,7 @@ def estimate_text_cost(model, input_tokens, output_tokens, rates=None):
 class SpendLedger:
     def __init__(self, database_path):
         self.path = str(Path(database_path))
-        with sqlite3.connect(self.path) as db:
+        with open_sqlite(self.path) as db:
             db.execute("""CREATE TABLE IF NOT EXISTS api_usage (
                 at_local TEXT NOT NULL, model TEXT NOT NULL,
                 input_tokens INTEGER NOT NULL, output_tokens INTEGER NOT NULL,
@@ -36,7 +36,7 @@ class SpendLedger:
 
     def record(self, model, input_tokens, output_tokens, rates=None):
         usd = estimate_text_cost(model, input_tokens, output_tokens, rates=rates)
-        with sqlite3.connect(self.path) as db:
+        with open_sqlite(self.path) as db:
             db.execute("INSERT INTO api_usage VALUES (?, ?, ?, ?, ?)",
                        (datetime.now().isoformat(timespec="seconds"), model,
                         input_tokens, output_tokens, usd))
@@ -44,7 +44,7 @@ class SpendLedger:
 
     def month_total(self):
         prefix = datetime.now().strftime("%Y-%m")
-        with sqlite3.connect(self.path) as db:
+        with open_sqlite(self.path) as db:
             value = db.execute(
                 "SELECT COALESCE(SUM(estimated_usd),0) FROM api_usage WHERE at_local LIKE ?",
                 (prefix + "%",),
@@ -53,7 +53,7 @@ class SpendLedger:
 
     def today_count(self):
         prefix = datetime.now().strftime("%Y-%m-%d")
-        with sqlite3.connect(self.path) as db:
+        with open_sqlite(self.path) as db:
             value = db.execute(
                 "SELECT COUNT(*) FROM api_usage WHERE at_local LIKE ?",
                 (prefix + "%",),
