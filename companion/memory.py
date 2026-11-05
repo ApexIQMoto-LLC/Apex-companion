@@ -6,7 +6,7 @@ OpenAI only when the user makes an AI request. Do not store tokens or passwords.
 from __future__ import annotations
 
 import re
-import sqlite3
+from .sqlite_utils import open_sqlite
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
@@ -49,7 +49,7 @@ class MemoryVault:
                 assistant_text TEXT NOT NULL)""")
 
     def _db(self):
-        return sqlite3.connect(self.path, timeout=5)
+        return open_sqlite(self.path, timeout=5)
 
     def add(self, fact: str, category="explicit") -> int:
         fact = clean(fact)
