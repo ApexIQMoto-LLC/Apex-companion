@@ -1,0 +1,16 @@
+APEX v0.9.0 verification
+========================
+Local test environment (Linux, Python 3.13):
+  - Full unittest suite: 151 passing (135 inherited core + business tests + 16 OAuth security tests)
+  - Tk Business Studio ACCOUNTS tab: window/tabs loaded in Xvfb
+  - New Python sources compile successfully
+  - OAuth provider calls: mocked only, no real account credentials were supplied
+
+REQUIRES TESTING ON USER'S WINDOWS PC:
+  - Windows Credential Manager persisted storage and deletion
+  - Google Desktop OAuth registration and consent
+  - TikTok Desktop authorization/refresh and approved scopes
+  - External HTTPS callbacks for Instagram, Meta Ads and TikTok Ads
+  - Google Ads developer token approval and customer access
+  - User's GA4 property permissions and event/tag installation
+  - Live API report imports are not yet implemented

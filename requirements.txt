@@ -1,0 +1,13 @@
+openai>=1.80,<4
+python-dotenv>=1.0,<2
+opencv-python>=4.10,<5
+vosk>=0.3.45,<1
+sounddevice>=0.5,<1
+webrtcvad-wheels>=2.0.14.post1,<3
+pyttsx3>=2.98,<3
+keyring>=25.6,<27
+
+cryptography>=43,<47
+Pillow>=10.4,<13; platform_system == "Windows"
+pywinauto==0.6.9; platform_system == "Windows"
+pystray>=0.19.5,<0.20; platform_system == "Windows"

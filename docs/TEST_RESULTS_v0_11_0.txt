@@ -1,0 +1,5 @@
+APEX v0.11.0 verification
+194 unittest cases passed (Python 3.13, Linux container, offline)
+Command: python -m unittest discover -s tests -q
+Warnings: pre-existing resource warnings about unclosed SQLite test connections.
+Not verified: real third-party API authentication, model inference, Windows tray and audio hardware.

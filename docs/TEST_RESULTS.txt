@@ -1,0 +1,71 @@
+test_cron_is_daily_and_gated_on_vault (test_automation.AutomationTests.test_cron_is_daily_and_gated_on_vault) ... ok
+test_desktop_does_not_store_financial_api_key (test_automation.AutomationTests.test_desktop_does_not_store_financial_api_key) ... ok
+test_new_install_defaults_to_context_on (test_context_v051.AIContextTests.test_new_install_defaults_to_context_on) ... ok
+test_no_auth_never_uses_private_cached_report (test_context_v051.AIContextTests.test_no_auth_never_uses_private_cached_report) ... ok
+test_refresh_failure_does_not_dump_sensitive_exception (test_context_v051.AIContextTests.test_refresh_failure_does_not_dump_sensitive_exception) ... ok
+test_refreshes_missing_metrics_before_prompt (test_context_v051.AIContextTests.test_refreshes_missing_metrics_before_prompt) ... ok
+test_uses_fresh_cache_without_duplicate_network_calls (test_context_v051.AIContextTests.test_uses_fresh_cache_without_duplicate_network_calls) ... ok
+test_ai_request_attaches_authorized_context_to_provider_instructions (test_context_v051.BrainPromptTests.test_ai_request_attaches_authorized_context_to_provider_instructions) ... ok
+test_updater_preserves_existing_keys_user_files_and_environment (test_context_v051.UpgradeSafetyTests.test_updater_preserves_existing_keys_user_files_and_environment) ... ok
+test_ledger (test_core.CoreTests.test_ledger) ... ok
+test_luna_pricing (test_core.CoreTests.test_luna_pricing) ... ok
+test_terra_pricing (test_core.CoreTests.test_terra_pricing) ... ok
+test_wake_phrase (test_core.CoreTests.test_wake_phrase) ... ok
+test_ai_context_whitelist (test_dashboard.DashboardTests.test_ai_context_whitelist) ... ok
+test_brief_without_login_does_not_claim_live_server (test_dashboard.DashboardTests.test_brief_without_login_does_not_claim_live_server) ... ok
+test_freshness_warns_about_stale_heartbeats (test_dashboard.DashboardTests.test_freshness_warns_about_stale_heartbeats) ... ok
+test_keyring_is_not_plaintext_file_store (test_dashboard.DashboardTests.test_keyring_is_not_plaintext_file_store) ... ok
+test_marketing_without_live_research_has_standing_ideas (test_dashboard.DashboardTests.test_marketing_without_live_research_has_standing_ideas) ... ok
+test_news_bad_links_filtered (test_dashboard.DashboardTests.test_news_bad_links_filtered) ... ok
+test_rls_restriction_is_not_zero (test_dashboard.DashboardTests.test_rls_restriction_is_not_zero) ... ok
+test_scheduler_due (test_dashboard.DashboardTests.test_scheduler_due) ... ok
+test_secret_key_rejected_for_desktop (test_dashboard.DashboardTests.test_secret_key_rejected_for_desktop) ... ok
+test_steam_adds_are_daily_not_total (test_dashboard.DashboardTests.test_steam_adds_are_daily_not_total) ... ok
+test_unknown_does_not_fake_zero_metrics (test_dashboard.DashboardTests.test_unknown_does_not_fake_zero_metrics) ... ok
+test_content_range (test_growth.HealthTests.test_content_range) ... ok
+test_freshness_missing_is_unknown (test_growth.HealthTests.test_freshness_missing_is_unknown) ... ok
+test_bad_links_rejected (test_growth.PublicMarketingTests.test_bad_links_rejected) ... ok
+test_rank_item_is_number (test_growth.PublicMarketingTests.test_rank_item_is_number) ... ok
+test_scan_writes_ranked_links_and_is_not_verified (test_growth.PublicMarketingTests.test_scan_writes_ranked_links_and_is_not_verified) ... ok
+test_full_week_comparison (test_growth.SteamGrowthTests.test_full_week_comparison) ... ok
+test_latest_and_seven_days (test_growth.SteamGrowthTests.test_latest_and_seven_days) ... ok
+test_missing_day_not_assumed_zero (test_growth.SteamGrowthTests.test_missing_day_not_assumed_zero) ... ok
+test_not_connected_is_not_zero (test_growth.SteamGrowthTests.test_not_connected_is_not_zero) ... ok
+test_reject_wrong_app_negative_invalid_future (test_growth.SteamGrowthTests.test_reject_wrong_app_negative_invalid_future) ... ok
+test_alert_dedupes_after_restart (test_intelligence_v063.AlertTests.test_alert_dedupes_after_restart) ... ok
+test_stale_not_healthy (test_intelligence_v063.AlertTests.test_stale_not_healthy) ... ok
+test_steam_and_beta_change_rules (test_intelligence_v063.AlertTests.test_steam_and_beta_change_rules) ... ok
+test_api_tool_loop_uses_source_data_without_persisting_server_state (test_intelligence_v063.BrainToolTests.test_api_tool_loop_uses_source_data_without_persisting_server_state) ... ok
+test_memory_disabled_means_no_log (test_intelligence_v063.BrainToolTests.test_memory_disabled_means_no_log) ... ok
+test_background_paid_ai_is_opt_in (test_intelligence_v063.GuardrailTests.test_background_paid_ai_is_opt_in) ... ok
+test_revoked_cloud_session_blocks_tools_without_network (test_intelligence_v063.GuardrailTests.test_revoked_cloud_session_blocks_tools_without_network) ... ok
+test_revoked_project_blocks_code_and_log_access (test_intelligence_v063.GuardrailTests.test_revoked_project_blocks_code_and_log_access) ... ok
+test_explicit_memory_persists_after_restart (test_intelligence_v063.MemoryTests.test_explicit_memory_persists_after_restart) ... ok
+test_full_erasure (test_intelligence_v063.MemoryTests.test_full_erasure) ... ok
+test_history_persists_and_is_erasable (test_intelligence_v063.MemoryTests.test_history_persists_and_is_erasable) ... ok
+test_memory_deduplicates (test_intelligence_v063.MemoryTests.test_memory_deduplicates) ... ok
+test_memory_requires_explicit_command (test_intelligence_v063.MemoryTests.test_memory_requires_explicit_command) ... ok
+test_redacts_obvious_api_key (test_intelligence_v063.MemoryTests.test_redacts_obvious_api_key) ... ok
+test_search_and_individual_delete (test_intelligence_v063.MemoryTests.test_search_and_individual_delete) ... ok
+test_cloud_disabled_removes_private_tools (test_intelligence_v063.ScopeTests.test_cloud_disabled_removes_private_tools) ... ok
+test_code_search_scoped_to_one_approved_folder (test_intelligence_v063.ScopeTests.test_code_search_scoped_to_one_approved_folder) ... ok
+test_no_write_tools (test_intelligence_v063.ScopeTests.test_no_write_tools) ... ok
+test_unity_logs_extract_code_error (test_intelligence_v063.ScopeTests.test_unity_logs_extract_code_error) ... ok
+test_no_symlink_escape (test_intelligence_v063.WorkspaceTests.test_no_symlink_escape) ... ok
+test_no_traversal_or_secrets (test_intelligence_v063.WorkspaceTests.test_no_traversal_or_secrets) ... ok
+test_no_write_without_approval_and_creates_backup (test_intelligence_v063.WorkspaceTests.test_no_write_without_approval_and_creates_backup) ... ok
+test_reject_ambiguous_patch (test_intelligence_v063.WorkspaceTests.test_reject_ambiguous_patch) ... ok
+test_reject_stale_proposal (test_intelligence_v063.WorkspaceTests.test_reject_stale_proposal) ... ok
+test_response_json_not_exec (test_intelligence_v063.WorkspaceTests.test_response_json_not_exec) ... ok
+
+----------------------------------------------------------------------
+Ran 59 tests in 0.117s
+
+OK
+
+Additional build validation:
+  python -m compileall -q main.py companion : PASS
+  Xvfb Tk launch at 1230x910 and 1316x710 : PASS
+  GUI development/alerts panel visible and controls fit 1366x768 : PASS
+  Model tool-calling integration : fake API responses, NOT live billable API test
+  Windows 3.12 / Unity / mic / camera / live Supabase login : MUST TEST ON USER PC

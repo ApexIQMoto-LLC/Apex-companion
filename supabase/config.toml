@@ -1,0 +1,4 @@
+# Prepared Edge Function configuration. Do not overwrite an existing project's
+# complete config.toml; MERGE this function entry instead.
+[functions.apexiq-companion-steam-sync]
+verify_jwt = false # The auth:'secret' wrapper validates the secret apikey header.

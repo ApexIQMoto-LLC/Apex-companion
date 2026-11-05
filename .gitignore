@@ -1,0 +1,21 @@
+# Local credentials / user state
+.env
+.env.*
+!.env.example
+config.json
+data/
+models/
+*.log
+*.db
+*.sqlite*
+*.key
+*.pem
+*.p12
+credentials*
+token*.json
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.DS_Store

@@ -1,0 +1,17 @@
+APEX v0.7.1 Linux test environment verification
+python3 -m unittest discover -s tests -q
+Ran 105 tests in 3.428s
+OK
+
+Coverage includes v0.7.0 original regressions, holographic waveform math,
+Windows idle-time / face-presence away-state logic with fake idle clock,
+manual override, and one-time sensor settings migration with opt-out retention.
+
+Additional smoke tests:
+- Tkinter app launch in virtual 1550x970 display: success
+- Switch from hologram to Intelligence and back: success
+- Tkinter app launch in virtual 1310x860 display: success
+- Compilation of edited Python modules: success
+
+Limits: Actual Windows webcam, microphone/Vosk, Telegram network delivery,
+Windows .cmd installer and Unity compilation not validated on this host.

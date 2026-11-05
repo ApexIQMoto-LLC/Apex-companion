@@ -1,0 +1,9 @@
+ApexIQ Companion v0.6.3.1 - Automated verification (2026-11-04)
+
+Unit/regression tests: 66 tests, all passing.
+New tests: adaptive output budget, token-exhaustion retry billed and bounded, no retry after content filtering, no orphan function tool calls under budget, standalone short chat, multiline explicit memory persistence.
+
+UI launch: timeout 7s xvfb-run -a python3 main.py; no traceback; process terminated by planned timeout.
+Windows native UI, microphone, camera, real API call and connected live Supabase access: NOT tested in this environment.
+
+No migrations or changes to the user's live database are included or required.

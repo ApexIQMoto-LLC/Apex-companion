@@ -1,0 +1,29 @@
+APEX Companion v0.10.0 verification (2026-11-04)
+
+AUTOMATED UNIT TESTS:
+  Ran 163 tests; all passed.
+  Includes 151 previous v0.9.0 tests and 12 v0.10 wake/session/permission tests.
+  Windows-only dependencies were not imported/executed on the Linux build host.
+
+DESKTOP UI SMOKE TEST:
+  Linux Xvfb Tk window test: passed.
+  - Full dashboard starts withdrawn.
+  - Compact hologram appears as fallback when Windows tray backend is unavailable.
+  - Business starter question visible in compact transcript.
+  - Full dashboard can be opened and then hidden to compact fallback.
+  - Compact text transcript and holographic drawing rendered.
+  See external preview image APEX_v0_10_mini_preview_crop.png.
+
+CODE AND PACKAGE:
+  All Python sources compile under Python 3.13 (build host).
+  Windows target is the app's documented Python 3.12 x64 installation.
+  Safe updater performs dependency installation and prior-code backup before copying.
+  Existing .env, config.json, local databases, .venv, Windows Credential Manager entries
+  and owner session data are not included or overwritten by the update process.
+
+NEEDS REAL WINDOWS VERIFICATION:
+  pystray icon registration and mouse click in Windows 10/11 notification area.
+  Vosk 16 kHz microphone capture and wake-word recognition on the user's device.
+  pyttsx3/SAPI output and turn-taking speech echo suppression with speakers.
+  Windows startup shortcut, camera sensor permissions, and account sessions.
+  Social platform live analytics ingestion is not implemented in this version.
