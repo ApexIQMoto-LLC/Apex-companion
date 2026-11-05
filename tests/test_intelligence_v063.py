@@ -126,7 +126,7 @@ class ScopeTests(unittest.TestCase):
             (b/"b.cs").write_text("public class RedBrake{}")
             index=ProjectIndexer(base/"index.sqlite")
             index.index(a);index.index(b)
-            self.assertEqual(index.search("Brake",root=a)[0]["path"],str(a/"a.cs"))
+            self.assertTrue(Path(index.search("Brake",root=a)[0]["path"]).samefile(a/"a.cs"))
             self.assertEqual(len(index.search("Brake",root=a)),1)
             toolbox=LiveToolbox(indexer=index,approved_project=a)
             matched=toolbox.run("search_approved_code",{"query":"Brake"})["matches"]
