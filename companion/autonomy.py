@@ -10,7 +10,7 @@ from __future__ import annotations
 import hashlib
 import os
 import re
-import sqlite3
+from .sqlite_utils import open_sqlite
 import tempfile
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -27,7 +27,7 @@ class SmallFixAutonomy:
         self.db=str(audit_dbpath)
         self.backup_root=Path(backup_root)
         Path(self.db).parent.mkdir(parents=True,exist_ok=True)
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             db.execute("""CREATE TABLE IF NOT EXISTS autonomous_fixes(
               id INTEGER PRIMARY KEY AUTOINCREMENT, at_utc TEXT NOT NULL,
               project_hash TEXT NOT NULL, path TEXT NOT NULL,
@@ -36,7 +36,7 @@ class SmallFixAutonomy:
               status TEXT NOT NULL)""")
 
     def today_fixes(self):
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             return int(db.execute("SELECT count(*) FROM autonomous_fixes WHERE at_utc LIKE ? AND status='static_verified'",
                                   (date.today().isoformat()+"%",)).fetchone()[0])
 
@@ -105,7 +105,7 @@ class SmallFixAutonomy:
                     results.append({"status":"manual_review","rule":"CS0105","file":rel,
                                     "reason":"Post-edit file changed; backup retained"})
                     continue
-                with sqlite3.connect(self.db) as db:
+                with open_sqlite(self.db) as db:
                     db.execute("""INSERT INTO autonomous_fixes(at_utc,project_hash,path,rule,before_hash,after_hash,backup_name,status)
                                   VALUES(?,?,?,?,?,?,?,?)""",
                                (datetime.now(timezone.utc).isoformat(),
@@ -129,7 +129,7 @@ class SmallFixAutonomy:
         if not approved:
             raise PermissionError("Owner approval required to roll back a code edit")
         project_hash=hashlib.sha256(str(guard.root).encode()).hexdigest()[:16]
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             row=db.execute("""SELECT id,path,before_hash,after_hash,backup_name
                            FROM autonomous_fixes WHERE project_hash=? AND status='static_verified'
                            ORDER BY id DESC LIMIT 1""",(project_hash,)).fetchone()
@@ -155,13 +155,13 @@ class SmallFixAutonomy:
             os.replace(tmp,target)
         finally:
             if os.path.exists(tmp):os.unlink(tmp)
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             db.execute("UPDATE autonomous_fixes SET status='rolled_back' WHERE id=? AND status='static_verified'",(ident,))
         return {"status":"rolled_back","file":rel,"rule":"CS0105","restored_original":True,
                 "warning":"Source restored; Unity compilation has not been run."}
 
     def recent(self,limit=20):
-        with sqlite3.connect(self.db) as db:
+        with open_sqlite(self.db) as db:
             rows=db.execute("SELECT at_utc,path,rule,backup_name,status FROM autonomous_fixes ORDER BY id DESC LIMIT ?",
                             (max(1,min(limit,100)),)).fetchall()
         return [{"at_utc":r[0],"file":r[1],"rule":r[2],"backup":r[3],"status":r[4]} for r in rows]
