@@ -1,7 +1,7 @@
 """Local, free, actionable alert rules with restart-safe deduplication."""
 from __future__ import annotations
 import json
-import sqlite3
+from .sqlite_utils import open_sqlite
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
@@ -46,7 +46,7 @@ class AlertCenter:
         self.path=str(path)
         self.lock=threading.RLock()
         Path(path).parent.mkdir(parents=True,exist_ok=True)
-        with sqlite3.connect(self.path) as db:
+        with open_sqlite(self.path) as db:
             db.execute("""CREATE TABLE IF NOT EXISTS alerts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,key TEXT UNIQUE NOT NULL,
                 severity TEXT NOT NULL,title TEXT NOT NULL,details TEXT NOT NULL,
@@ -54,7 +54,7 @@ class AlertCenter:
 
     def ingest(self,alerts:list[dict]) -> list[dict]:
         novel=[]
-        with self.lock,sqlite3.connect(self.path) as db:
+        with self.lock,open_sqlite(self.path) as db:
             for alert in alerts:
                 key=str(alert["key"])[:240]
                 if not key:continue
@@ -67,7 +67,7 @@ class AlertCenter:
         return novel
 
     def recent(self,limit=35,only_unread=False):
-        with self.lock,sqlite3.connect(self.path) as db:
+        with self.lock,open_sqlite(self.path) as db:
             q="SELECT id,severity,title,details,first_seen_utc,acknowledged FROM alerts "
             if only_unread:q+="WHERE acknowledged=0 "
             q+="ORDER BY id DESC LIMIT ?"
@@ -75,12 +75,12 @@ class AlertCenter:
         return [{"id":r[0],"severity":r[1],"title":r[2],"details":r[3],"at_utc":r[4],"acknowledged":bool(r[5])} for r in rows]
 
     def acknowledge(self,ids=None):
-        with self.lock,sqlite3.connect(self.path) as db:
+        with self.lock,open_sqlite(self.path) as db:
             if ids is None: db.execute("UPDATE alerts SET acknowledged=1")
             else:
                 for ident in ids: db.execute("UPDATE alerts SET acknowledged=1 WHERE id=?",(int(ident),))
 
     def delete_all(self):
         """Permanently erase the local notification history."""
-        with self.lock,sqlite3.connect(self.path) as db:
+        with self.lock,open_sqlite(self.path) as db:
             db.execute("DELETE FROM alerts")
